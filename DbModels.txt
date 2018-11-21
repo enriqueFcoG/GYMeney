@@ -1,0 +1,38 @@
+Profile:
+	-name
+	-lastName
+	-age
+	-height
+	-weight
+	-imc
+	-%
+	-conditionLevel
+
+BodyType:
+	-type
+	-totalCalories
+
+Plan:
+	-diet
+	-routine
+	-daysForWeek
+	-totalWeeks	
+
+Diet:
+	-totalCalories
+	-totalFoods
+
+Routine:
+	-exercisesperDay
+
+Food:
+	-name
+	-calories
+	-timeToPepare
+
+Exercise:
+	-name
+	-Description
+	-
+
+	

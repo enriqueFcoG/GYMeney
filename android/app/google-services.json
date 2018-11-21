@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "714755807875",
+    "firebase_url": "https://catest-65edb.firebaseio.com",
+    "project_id": "catest-65edb",
+    "storage_bucket": "catest-65edb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714755807875:android:79fde60c3ed3be40",
+        "android_client_info": {
+          "package_name": "com.finalfire"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714755807875-s4keitbgg0js5lki0s8qjlees0h5hb8k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoWm_VDMeXJO4JiRTBxtcxCbb1bS-g2fg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714755807875:android:20b51977e4fa13d0",
+        "android_client_info": {
+          "package_name": "com.gymeney"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714755807875-s4keitbgg0js5lki0s8qjlees0h5hb8k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoWm_VDMeXJO4JiRTBxtcxCbb1bS-g2fg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
