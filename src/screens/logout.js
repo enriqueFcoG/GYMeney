@@ -4,6 +4,7 @@ import {Platform,
         } from 'react-native';
 
 import Login from '../../login';
+import firebase from 'react-native-firebase';
 
 
   const styles = StyleSheet.create({
@@ -16,6 +17,15 @@ import Login from '../../login';
 
   
   export default class Logout extends Component {
+
+    componentDidMount(){
+     firebase.auth().signOut().then(function() {
+        
+      }).catch(function(error) {
+        
+      });
+    }
+
     render() {
       return <Login/>;
     }

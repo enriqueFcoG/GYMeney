@@ -5,12 +5,101 @@ import Plan from '../plan';
 import Histories from '../histories';
 import Routine from '../routine';
 import Login from '../logout';
+import firebase from 'react-native-firebase';
+import Helpers from '../../../database/helpers';
 
+
+var user = firebase.auth().currentUser;
+var avatar = "ke tranza"
+
+
+class Infouser extends Component{
+    constructor(props){
+        super(props)
+
+        this.state = {
+            imagen: '../../img/profile.png',
+            name: "",
+            age: '',
+            email: ''
+        }
+
+    }
+
+    async componentWillMount(){
+        var user = await firebase.auth().currentUser        
+            try{
+                console.log("hola :v")             
+                Helpers.showAvatar(user.uid,(avatarpath) =>{
+                    this.setState({
+                        imagen: avatarpath
+                    })
+                })
+
+                Helpers.getName(user.uid, (nombre) =>{
+                    this.setState({
+                        name : nombre
+                    })
+                })
+
+                Helpers.getAge(user.uid,(edad)=>{
+                    this.setState({
+                        age: edad
+                    })
+                })
+
+                Helpers.getEmail(user.uid,(correo)=>{
+                    this.setState({
+                        email: correo
+                    })
+                })
+
+                 }catch(error){
+        
+                 }
+    }
+
+    render(){
+        return(           
+
+    <View>
+        <View style={{height:150, alignItems:'center'}}>
+    
+            <View>
+                <Image source={{uri: this.state.imagen}} style={styles.profileImage}/>
+            </View>
+    
+        </View>
+    
+    <View style={{alignItems:'center'}}>
+        <Text style={styles.userInfoText}>{this.state.name}</Text>
+        <Text style={styles.userInfoText}>{this.state.email}</Text>
+        <Text style={styles.userInfoText}>{this.state.age} años</Text>
+    </View>
+    </View>
+
+        )
+    }
+
+}
 class Drawernav extends Component{
     static navigationOptions = {
         header: null
       };
+
+      constructor(props){
+          super(props)
+
+          this.state = {
+              email: ''              
+          }
+          
+      }
+
+     
+
     render(){
+        
         return(        
 
             <ProfileMenu/>
@@ -18,24 +107,17 @@ class Drawernav extends Component{
         );
     }
 }
+
+
+
 const customMenu = (props) =>(
     <SafeAreaView style={styles.safeStyle}>
-        <View style={{height:150, alignItems:'center'}}>
-            
-                <Image source={require('../../img/orugita.jpg')} style={styles.profileImage}/>
-            
-        </View>
-        <ScrollView>
-            <View style={{alignItems:'center'}}>
-                <Text style={styles.userInfoText}>Marysol Torrez Padila</Text>
-                <Text style={styles.userInfoText}>25 años</Text>
-                <Text style={styles.userInfoText}>160 cm</Text>
-                <Text style={styles.userInfoText}>65 Kg</Text>
-            </View>
-            <DrawerItems {...props}/>
-        </ScrollView>
+    <Infouser/>
+    <ScrollView>
+    <DrawerItems {...props}/>
+    </ScrollView>
     </SafeAreaView>
-)
+    )
 
 const ProfileMenu = createDrawerNavigator({
     Plan: Plan,

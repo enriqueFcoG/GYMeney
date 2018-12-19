@@ -3,18 +3,18 @@ package com.gymeney;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-//import io.realm.react.RealmReactPackage;
 import com.imagepicker.ImagePickerPackage;
 import io.invertase.firebase.RNFirebasePackage;
-//import com.facebook.reactnative.androidsdk.FBSDKPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
 //import io.realm.react.RealmReactPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
+import io.invertase.firebase.auth.RNFirebaseAuthPackage;
+import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 
 /*import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
@@ -41,12 +41,15 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),            
+          new MainReactPackage(),
             new ImagePickerPackage(),
-            new RNFirebasePackage(),            
+            new RNFirebasePackage(),
+            new RNFetchBlobPackage(),            
             //new RealmReactPackage(),
             //new FBSDKPackage(mCallbackManager),
-            new RNFirebaseDatabasePackage()
+            new RNFirebaseDatabasePackage(),
+            new RNFirebaseAuthPackage(),
+            new RNFirebaseStoragePackage()
       );
     }
 

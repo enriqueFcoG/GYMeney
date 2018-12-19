@@ -17,50 +17,28 @@ import Plan from './src/screens/plan';
 import Drawernav from './src/screens/menus/drawernav';
 import Begin from './src/screens/begin';
 import Dietplan from './src/screens/dietplan';
-import firebase from 'react-native-firebase';
+//import firebase from 'react-native-firebase';
+import Cfirebase from './database/Cfirebase';
 
 import { AccessToken, LoginManager } from 'react-native-fbsdk';
-
-// Calling the following function will open the FB login dialogue:
-const facebookLogin = async () => {
+  const facebookLogin = async () => {
   try {
     const result = await LoginManager.logInWithReadPermissions(['public_profile', 'email']);
-
     if (result.isCancelled) {
       throw new Error('User cancelled request'); // Handle this however fits the flow of your app
     }
-
     console.log(`Login success with permissions: ${result.grantedPermissions.toString()}`);
-
-    // get the access token
     const data = await AccessToken.getCurrentAccessToken();
-
     if (!data) {
       throw new Error('Something went wrong obtaining the users access token'); // Handle this however fits the flow of your app
     }
-
-    // create a new firebase credential with the token
     const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
-
-    // login with credential
     const currentUser = await firebase.auth().signInAndRetrieveDataWithCredential(credential);
-
     console.info(JSON.stringify(currentUser.user.toJSON()))
   } catch (e) {
     console.error(e);
   }
 }
-const config = {
-  apiKey: "AIzaSyBSbFeeMuTLQ5fBAy-5EVKTBxtNO6mSmjA",
-  authDomain: "catest-65edb.firebaseapp.com",
-  databaseURL: "https://catest-65edb.firebaseio.com",
-  projectId: "catest-65edb",
-  storageBucket: "catest-65edb.appspot.com",
-  messagingSenderId: "714755807875"
-};
-firebase.initializeApp(config);
-
-
 class HomeScreen extends Component {
 constructor(){
   super()
@@ -68,7 +46,8 @@ constructor(){
     contador : 0,
     usuario: "",
     clave: "",
-    mensaje: ''
+    mensaje: '',
+    errorMessage: ''
   }
   this.state.colorTexto = {
     color:'white'
@@ -76,7 +55,9 @@ constructor(){
   this.handleChangeText = this.handleChangeText.bind(this)
   this.gymLogin = this.gymLogin.bind(this)
   this.addMessage = this.addMessage.bind(this);
-  this._fbLogin = this._fbLogin.bind(this);
+  this.crear_usuario = this.crear_usuario.bind(this);
+  this.login_user = this.login_user.bind(this)
+  //this._fbLogin = this._fbLogin.bind(this);
 
   setInterval(() =>{
     if(this.state.colorTexto.color == "white"){
@@ -96,29 +77,14 @@ constructor(){
 }
 
 
-_fbLogin(){
-  firebase.auth().signInWithPopup(provider).then(function(result) {
-  // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-  var token = result.credential.accessToken;
-  // The signed-in user info.
-  var user = result.user;
-  alert("login exitoso!!")
-  // ...
-}).catch(function(error) {
-  // Handle Errors here.
-  var errorCode = error.code;
-  var errorMessage = error.message;
-  // The email of the user's account used.
-  var email = error.email;
-  // The firebase.auth.AuthCredential type that was used.
-  var credential = error.credential;
-  // ...
-});
-}
+
 
 addMessage () {
   if(!this.state.mensaje) return;
-  firebase.database().ref('mensajes/').push({
+
+
+
+Cfirebase.f.database().ref('mensajes/').set({
     mess: this.state.mensaje
   });
 
@@ -137,10 +103,47 @@ handleChangeText(newText){
   })
 }
 
-forgotPassCount(){
-  this.setState({
-    contador: this.state.contador+1
-  })
+
+
+crear_usuario(){
+  Cfirebase.f.auth().createUserWithEmailAndPassword(this.state.usuario,this.state.clave)
+  .then(
+    //() => this.props.navigation.navigate("Menu")
+    alert(this.state.usuario+ "\n"+ this.state.clave)
+  )
+  .catch(error => this.setState({ errorMessage: error.message}))
+
+  
+}
+
+test_function(){
+    this.props.navigation.navigate("Menu")
+   
+}
+
+login_user(){  
+  if(this.state.usuario != '' && this.state.clave !=''){
+    Cfirebase.f.auth().signInWithEmailAndPassword(this.state.usuario,this.state.clave)
+    .then(
+      () =>  this.props.navigation.navigate("Menu")
+    )
+    .catch(function(){
+      alert("Usuario y/o contraseña incorrectos")
+    })
+  }else{
+    alert("Ingrese sus credenciales")
+  }
+
+
+}
+
+componentDidMount(){
+  Cfirebase.f.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      () => this.props.navigation.navigate("Menu")      
+    } else {
+    }
+  });
 }
 
   static navigationOptions = {
@@ -156,23 +159,25 @@ forgotPassCount(){
         backgroundColor="#273238"
         barStyle="light-content"/>
         
+        <View style={{alignItems: 'center', justifyContent: 'center'}}>
         <Image source={require('./src/img/gymeney_logo.png')} style={styles.logoGYM}/>
-
+        </View>
         <TextInput style={styles.textosLogin}           
           underlineColorAndroid='#495B62'
           placeholder="Username or email"
           placeholderTextColor='#495B62'
           //onChangeText={this.handleChangeText}
           ref={input =>this._usuario = input}
-          onChangeText={(mensaje) => this.setState({mensaje})}
-          value={this.state.mensaje}
+          onChangeText={(usuario) => this.setState({usuario})}
+          value={this.state.usuario}
           />
           
         <TextInput           
           style={styles.textosLogin} 
           placeholderTextColor='#495B62'
           underlineColorAndroid="#495B62" 
-          placeholder="Password"
+          placeholder="contraseña"
+          onChangeText={(clave) => this.setState({clave})}
           secureTextEntry={true}
           ref={input =>this._contrasena = input}
           />
@@ -181,24 +186,23 @@ forgotPassCount(){
               color= '#83C587'
               title="Log In"
               //onPress={() => this.props.navigation.navigate('Menu')}
-              onPress={this.addMessage}
+              onPress={this.login_user}
             />  
           </View>
-
         <Text style={styles.forgotText} 
-          onPress={this.forgotPassCount.bind(this)}>Forgot your password?
+          onPress={(metodochido)}>¿Olvidaste tu contraseña?
         </Text>  
 
-         <Text style={styles.textoOR} >OR</Text>
+         <Text style={styles.textoOR} >O</Text>
            <View style={styles.btnFacebook}>
             <Button 
               color="#3b5998"
-              title="sign in with Facebook"
+              title="inicia sesion con Facebook"
               onPress={(facebookLogin)}
             />        
           </View>
           <Text style={[styles.forgotText, this.state.colorTexto]} 
-          onPress={()=> this.props.navigation.navigate('Registro')}>New User? Sign Up
+          onPress={()=> this.props.navigation.navigate('Registro')}>¿Nuevo usuario? Registrate
         </Text> 
         </ScrollView>        
       </View>
@@ -208,10 +212,16 @@ forgotPassCount(){
     }
   }
 
-  const ingresar = () =>{
-    alert("In process...")
+  
+
+  const metodochido = () =>{
+    alert("holanena");
+    ingresar();
   }
 
+  const ingresar = () =>{
+    alert("faste");
+  }
 
   const styles = StyleSheet.create({
     container: {
@@ -295,5 +305,4 @@ forgotPassCount(){
       return <RootStack/>;
     }
   }
-
 
