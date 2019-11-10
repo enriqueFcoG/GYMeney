@@ -17,7 +17,6 @@ import Plan from './src/screens/plan';
 import Drawernav from './src/screens/menus/drawernav';
 import Begin from './src/screens/begin';
 import Dietplan from './src/screens/dietplan';
-//import firebase from 'react-native-firebase';
 import Cfirebase from './database/Cfirebase';
 
 import { AccessToken, LoginManager } from 'react-native-fbsdk';
